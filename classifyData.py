@@ -8,8 +8,6 @@
 #we do not necessarily need 1..n of each image and there are break for example we have tomato 001 002 007 and 009
 
 import numpy as np
-from numpy import pi
-import matplotlib.pyplot as plt
 import os
 
 print("Export images into their own folder with no other files in the datasets folder and enter folder name.\nIf name is left empty will default to FoodTest1.")
@@ -43,5 +41,4 @@ with os.scandir(directory) as root_dir:
                 i += 1
 
 print(imageList)
-
 np.savetxt("result.csv", imageList, delimiter=",", header="", comments="",fmt='%s')
