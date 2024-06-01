@@ -9,14 +9,15 @@
 
 import numpy as np
 import os
+import shutil
 
-print("Export images into their own folder with no other files in the datasets folder and enter folder name.\nIf name is left empty will default to FoodTest1.")
+print("Export images into ***their own folder*** with no other files ***in the datasets folder*** and enter folder name with no /'s.\nIf name is left empty will default to FoodTest1.")
 folderName = input("Enter Folder Name:")
 
 if not folderName:
     folderName = "FoodTest1"
 
-directory = ".\\datasets\\"+folderName
+directory = "./datasets/"+folderName
 
 #we error if we have files in the folder that do not fit the format but I'm gonna specifically catch .DS_Store because the initial dataset includes it
 i = 0
@@ -38,7 +39,14 @@ with os.scandir(directory) as root_dir:
                 values = path.name.split('_')
                 imageList[i] = [values[0], values[1], values[2], path.path ]
                 imageList[i,2] = imageList[i,2].removesuffix('.JPG')
+                newDirectory = './datasets/imageTypes/n'+values[0]
+                if not os.path.exists(newDirectory):
+                    os.makedirs(newDirectory)
+                    print("made "+newDirectory)
+
+                shutil.copy2(path, newDirectory)
+
                 i += 1
 
 print(imageList)
-np.savetxt("result.csv", imageList, delimiter=",", header="", comments="",fmt='%s')
+#np.savetxt("result.csv", imageList, delimiter=",", header="", comments="",fmt='%s')
