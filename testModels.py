@@ -29,7 +29,7 @@ with os.scandir(directory) as root_dir:
                 i += 1
                 #print(f"Full path is: {path} and just the name is: {path.name}")
 
-print(f"{i} files scanned successfully.\n")
+print(f"{i} files scanned successfully.")
 
 testDirectory = './datasets/test images'
 
@@ -57,37 +57,50 @@ with os.scandir(directory) as root_dir:
                 shutil.copy2(path, testDirectory)
                 i += 1
 
-print("Images moved to ./datasets/test images")
+print("Images moved to ./datasets/test images\n")
 
 looping = True
 res50,res18,squeeze,vgg,image_transforms, categories = model_init()
 
 while (looping == True):
-    desiredModel = input("Enter 0, 1, 2 to test saved models\nResnet50, Resnet18, or Squeezenet: ")
+    desiredModel = input("Enter 0, 1 or 2 to test saved models\nResnet50, Resnet18, or Squeezenet: ")
     model = None
 
     match desiredModel:
         case '0':
-            print("ResNet50")
+            _modelName = "res50Results"
             model = res50
         case '1':
-            print("ResNet18")
+            _modelName = "res18Results"
             model = res18
         case '2':
-            print("Squeezenet")
+            _modelName = "SqueezeResults"
             model = squeeze
         case _:
             looping = False
         
     if (looping != False):
+        i=0
         with os.scandir(testDirectory) as root_dir:
             for path in root_dir:
                 if path.is_file():
-                    #print(path.path)
-                    classify(model, image_transforms, path.path, categories)
+                    i+=1
+
+        classificationList = np.empty([i,2], dtype=object)   
+
+        i=0
+        with os.scandir(testDirectory) as root_dir:
+            for path in root_dir:
+                if path.is_file():
+                    predictedCategory = classify(model, image_transforms, path.path, categories)
+                    classificationList[i] = [path.name, predictedCategory]
+                    i+=1
         
+        print("\n"+classificationList)
+        np.savetxt(_modelName+".csv", classificationList, delimiter=",", header="", comments="",fmt='%s')
+        print("results saved to "+_modelName+".csv\n")
+
         print("Enter anything else to close the program")
 else:
     print("Goodbye")
 
-        

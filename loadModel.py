@@ -54,7 +54,7 @@ def model_init():
         transforms.ToTensor()
     ])
 
-    modelRes50 = torch.load('./savedModels/resnet50_A.pth')
+    modelRes50 = torch.load('./savedModels/resnet50_B.pth')
     modelRes18 = None
     modelSqueeze = None
     modelVGG = None
@@ -71,4 +71,6 @@ def classify(model, image_transforms, image_path, categories):
     output = model(image)
     _, predicted = torch.max(output.data, 1)
 
-    print(categories[predicted.item()])
+    #print(categories[predicted.item()])
+
+    return predicted.item()
