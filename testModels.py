@@ -83,7 +83,7 @@ while (looping == True):
         with os.scandir(testDirectory) as root_dir:
             for path in root_dir:
                 if path.is_file():
-                    print(path.path)
+                    #print(path.path)
                     classify(model, image_transforms, path.path, categories)
         
         print("Enter anything else to close the program")
