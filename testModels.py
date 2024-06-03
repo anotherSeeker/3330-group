@@ -96,7 +96,7 @@ while (looping == True):
                     classificationList[i] = [path.name, predictedCategory]
                     i+=1
         
-        print("\n"+classificationList)
+        print(classificationList)
         np.savetxt(_modelName+".csv", classificationList, delimiter=",", header="", comments="",fmt='%s')
         print("results saved to "+_modelName+".csv\n")
 

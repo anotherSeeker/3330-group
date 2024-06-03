@@ -56,7 +56,7 @@ def model_init():
 
     modelRes50 = torch.load('./savedModels/resnet50_B.pth')
     modelRes18 = torch.load('./savedModels/resnet18_A.pth')
-    modelSqueeze = None
+    modelSqueeze = torch.load('./savedModels/SqueezeNet.pth')
     
 
     return modelRes50, modelRes18, modelSqueeze, image_transforms, categories
