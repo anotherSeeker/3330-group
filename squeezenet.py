@@ -14,7 +14,7 @@ print('Using {}'.format(device))
 torch.device(device)
 
 # Hyperparameters
-num_epochs = 15
+num_epochs = 8
 learning_rate = 0.001
 momentum = 0.9
 weight_decay = 0.0005
@@ -42,7 +42,7 @@ squeeze_transforms = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
-# Applies the trainformations
+# Applies the transformations
 train_dataset = torchvision.datasets.ImageFolder(root = train_dataset_path, transform = squeeze_transforms)
 valid_dataset = torchvision.datasets.ImageFolder(root = valid_dataset_path, transform = squeeze_transforms)
 
@@ -54,11 +54,23 @@ valid_loader = torch.utils.data.DataLoader(valid_dataset, batch_size = 32, shuff
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=learning_rate, momentum=momentum, weight_decay=weight_decay)
 
+# Best loss and checkpoint function used for saving model
+best_acc = 0.0
+def save_checkpoint(model, epoch, optimizer, best_acc):
+    state = {
+        'epoch': epoch + 1,
+        'model': model.state_dict(),
+        'best accuracy': best_acc,
+        'optimizer': optimizer.state_dict(),
+    }
+    torch.save(state, 'model_best_checkpoint.pth.tar')
+    print(f'Saved model on epoch: {epoch+1} with accuracy: {best_acc:.2f}%')
+
 # Training and validation loop
 for epoch in range(num_epochs):
     # Training phase
     model.train()
-    running_loss = 0.0
+    total_loss = 0.0
     for images, labels in train_loader:
         images = images.to(device)
         labels = labels.to(device)
@@ -74,10 +86,11 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
         
-        running_loss += loss.item()
+        total_loss += loss.item()
     
-    epoch_loss = running_loss / len(train_loader)
+    epoch_loss = total_loss / len(train_loader)
     print(f'Epoch [{epoch+1}/{num_epochs}], Loss: {epoch_loss:.4f}')
+
     
     # Validation phase
     model.eval()
@@ -95,5 +108,7 @@ for epoch in range(num_epochs):
     accuracy = 100 * correct / total
     print(f'Validation Accuracy: {accuracy:.2f}%')
 
-
+    if best_acc < accuracy:
+        best_acc = accuracy
+        save_checkpoint(model, epoch, optimizer, best_acc)
 
