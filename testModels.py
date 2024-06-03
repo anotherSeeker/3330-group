@@ -60,7 +60,7 @@ with os.scandir(directory) as root_dir:
 print("Images moved to ./datasets/test images\n")
 
 looping = True
-res50,res18,squeeze,vgg,image_transforms, categories = model_init()
+res50, res18, squeeze, image_transforms, categories = model_init()
 
 while (looping == True):
     desiredModel = input("Enter 0, 1 or 2 to test saved models\nResnet50, Resnet18, or Squeezenet: ")

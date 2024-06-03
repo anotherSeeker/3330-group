@@ -55,12 +55,11 @@ def model_init():
     ])
 
     modelRes50 = torch.load('./savedModels/resnet50_B.pth')
-    modelRes18 = None
+    modelRes18 = torch.load('./savedModels/resnet18_A.pth')
     modelSqueeze = None
-    modelVGG = None
     
 
-    return modelRes50, modelRes18, modelSqueeze, modelVGG, image_transforms, categories
+    return modelRes50, modelRes18, modelSqueeze, image_transforms, categories
 
 def classify(model, image_transforms, image_path, categories):
     model = model.eval()
